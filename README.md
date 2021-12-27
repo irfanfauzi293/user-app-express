@@ -27,6 +27,10 @@ There is dockerfile if you want to run the app without install node locally. I'm
  
  Dockerfile used for running app without node.js locally.
  
+ ### Postman Documentations
+ 
+ Collection and postman environment. Import these files to your local postman for testing API.
+ 
  ## Running app locally with node.js
  
  - Create .env in your directory
@@ -77,7 +81,8 @@ There is dockerfile if you want to run the app without install node locally. I'm
 ````
 POST /authentications
 
-Returns access token and refresh token
+Returns access token and refresh token.
+Use this credential for testing CRUD API.
 
 request payload :
 {

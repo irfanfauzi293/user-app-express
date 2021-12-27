@@ -1,8 +1,9 @@
 const userAccess = require('../util/userAccess');
 
 class UsersController {
-  constructor(service) {
+  constructor(service, validator) {
     this._service = service;
+    this._validator = validator;
     this.postUser = this.postUser.bind(this);
     this.putUser = this.putUser.bind(this);
     this.deleteUser = this.deleteUser.bind(this);
@@ -12,6 +13,7 @@ class UsersController {
   async postUser(req, res) {
     try {
       userAccess.verifyCreateAcess(req.decoded);
+      this._validator.validateUserCreatePayload(req.body);
 
       const { username, password, fullname } = req.body;
 
@@ -58,6 +60,7 @@ class UsersController {
   async putUser(req, res) {
     try {
       userAccess.verifyUpdateAccess(req.decoded);
+      this._validator.validateUserUpdatePayload(req.body);
 
       const { fullname } = req.body;
       const { id } = req.params;

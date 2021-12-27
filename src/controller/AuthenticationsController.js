@@ -1,11 +1,13 @@
 class AuthenticationsController {
-  constructor(authenticationsService, usersService, tokenManager) {
+  constructor(authenticationsService, usersService, tokenManager, validator) {
     this._authenticationsService = authenticationsService;
     this._usersService = usersService;
     this._tokenManager = tokenManager;
+    this._validator = validator;
 
     this.postLoginUser = this.postLoginUser.bind(this);
     this.putAuthentication = this.putAuthentication.bind(this);
+    this.deleteAuthentication = this.deleteAuthentication.bind(this);
     this.verifyToken = this.verifyToken.bind(this);
   }
 
@@ -39,11 +41,13 @@ class AuthenticationsController {
 
   async putAuthentication(req, res) {
     try {
+      this._validator.validateAuthenticationPayload(req.body);
+
       const { refreshToken } = req.body;
       await this._authenticationsService.verifyRefreshToken(refreshToken);
-      const { id } = this._tokenManager.verifyToken(refreshToken, process.env.REFRESH_TOKEN_KEY);
+      const { id, createAccess, readAccess, updateAccess, deleteAccess } = this._tokenManager.verifyToken(refreshToken, process.env.REFRESH_TOKEN_KEY);
 
-      const accessToken = this._tokenManager.generateAccessToken({ id });
+      const accessToken = this._tokenManager.generateAccessToken({ id, createAccess, readAccess, updateAccess, deleteAccess });
       res.json({
         status: 'success',
         message: 'Access Token is Updated',
@@ -56,6 +60,23 @@ class AuthenticationsController {
         status: 'failed',
         message: error.message
       })
+    }
+  }
+
+  async deleteAuthentication(req, res) {
+    try {
+      this._validator.validateAuthenticationPayload(req.body);
+
+      const { refreshToken } = req.body;
+      await this._authenticationsService.verifyRefreshToken(refreshToken);
+      await this._authenticationsService.deleteRefreshToken(refreshToken);
+
+      res.json({
+        status: 'success',
+        message: 'Refresh token is deleted'
+      });
+    } catch (error) {
+      res.json()
     }
   }
 

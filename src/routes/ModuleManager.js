@@ -6,12 +6,14 @@ const AuthenticationsService = require('../service/AuthenticationsService');
 const UsersController = require('../controller/UsersController');
 const AuthenticationsController = require('../controller/AuthenticationsController');
 const TokenManager = require('../tokenize/TokenManager');
+const userValidator = require('../validator/users');
+const authenticationValidator = require('../validator/authentications');
 const usersDao = new UsersDao();
 const rolesDao = new RolesDao();
 const authenticationsDao = new AuthenticationsDao();
 const usersService = new UsersService(usersDao, rolesDao);
-const usersController = new UsersController(usersService);
+const usersController = new UsersController(usersService, userValidator);
 const authenticationsService = new AuthenticationsService(authenticationsDao);
-const authenticationsController = new AuthenticationsController(authenticationsService, usersService, TokenManager);
+const authenticationsController = new AuthenticationsController(authenticationsService, usersService, TokenManager, authenticationValidator);
 
 module.exports = { usersController, authenticationsController };

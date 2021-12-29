@@ -15,7 +15,7 @@
  
  - Docker (Optional)
  
-There is dockerfile if you want to run the app without install node locally. I'm still learning this so you still have to install postgresql locally to connect docker   container to postgresql.
+You should install docker first if you want running app with docker. You can take advantage of docker to run the app without node and postgresql installed locally.
 
  ## Project Structure
  
@@ -25,7 +25,7 @@ There is dockerfile if you want to run the app without install node locally. I'm
  
  ### Dockerfile
  
- Dockerfile used for running app without node.js locally.
+ There are dockerfile and docker-compose. Dockerfile will make a container of this app. You will need pull postgres image for the database container. 
  
  ### Postman Documentations
  
@@ -61,20 +61,22 @@ There is dockerfile if you want to run the app without install node locally. I'm
 
  ## Running app with docker
  
- - open pg_hba.conf in postgresql system directory /PostgresSQL/13/data.
+ - Pull postgres image with this command:
    ````
-     host all all 0.0.0.0/0 md5 
+   docker pull postgres
    ````
-   add it at the end of line.
- - open postgresql.conf in postgresql system directory /PostgresSQL/13/data.
-   
+ - Build app container. Run this command in your app directory:
    ````
-   listen_address = '*'
+   docker build -t docker_users_app_express .
    ````
-   change the value of listen_address into '*'.
- - change env value in dockerfile based on your environment variable.
- - type docker build -t docker_users_app_express in app directory.
- - type docker run -it -p 5000:5000 docker_users_app_express , to run docker image.
+ - Run docker-compose. It will make connection for app container and database container, and then run them. Use this command in your app directory:
+   ````
+   docker-compose up -d
+   ````
+ - To shut down the container use this command so app container and database container will be stopped at the same time: 
+   ````
+   docker-compose down -v
+   ````
 
 ## API Endpoints
 ### Login API

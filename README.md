@@ -34,23 +34,16 @@ You should install docker first if you want running app with docker. You can tak
  ## Running app locally with node.js
  
  - Create .env in your directory
-  
+    ````
     PORT=[port]
-
     ACCESS_TOKEN_KEY=[your secretKey for access token]
-
     REFRESH_TOKEN_KEY=[your secretKey for refresh token]
-
     PGUSER=postgres
-
     PGHOST=localhost
-
     PGPASSWORD=[your local postgresql password]
-
     PGDATABASE=usersapp_express
-
     PGPORT=5432
-    
+    ````
  - Create database usersapp_express in your local postgresql
  - npm install
  - npm run migrate up

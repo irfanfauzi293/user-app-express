@@ -1,0 +1,44 @@
+version: '3.7'
+
+services:
+  api:
+    container_name: container_users_app_express
+    image: docker_users_app_express
+    ports: 
+      - "5000:5000"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - PORT=5000
+      - ACCESS_TOKEN_KEY=ec2076f8f9f3f838dadebbee482fd24ab53fd763773b9960f82c4f3e7820c2880ac18b0e6a58ba1dc9912cfe0313141b4afc5f7f79a1383f50113d742716c281
+      - REFRESH_TOKEN_KEY=f5dce420da3478d47d4fc9317177aaf0202e77bb4f284fa0e87b0279ecfde1f475b3d25f18847a7bbc7ac4d9e21ca037694cb1d742bb33cf41605f72864f260b
+      - PGUSER=postgres
+      - PGHOST=db
+      - PGPASSWORD=password
+      - PGDATABASE=usersapp_express
+      - PGPORT=5432
+    networks:
+      - node-network
+  db:
+    container_name: container_postgres
+    image: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=usersapp_express
+    networks:
+      - node-network
+
+networks:
+  node-network:
+    name: node-network
